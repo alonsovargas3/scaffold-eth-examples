@@ -1,5 +1,5 @@
 
-# 🏗 scaffold-eth - Meta Multi Signature Wallet
+# 🏗 scaffold-eth - Meta Multi Signature Wallet --
 
 > an off-chain signature based multi sig wallet
 
@@ -153,7 +153,7 @@ This time we will need a second signature:
 You may not want every signer to create new transfers, only allow them to sign existing transactions or a mega-admin role who will be able to veto any transaction.
 
 #### 😎 Integrate this MultiSig wallet into other branches like nifty-ink  
-Make a MultiSig wallet to store your precious doodle-NFTs!? 
+Make a MultiSig wallet to store your precious doodle-NFTs!?
 
 ---
 
