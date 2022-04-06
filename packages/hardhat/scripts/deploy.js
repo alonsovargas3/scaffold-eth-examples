@@ -13,11 +13,7 @@ const main = async () => {
                     // 0xbB69eAb3c34A368151277823e36921Fb366EaE1e (ropsten/rinkeby)
                     // 0x22d63804D00b4B2BF3dE7Dd21c22aD839E62f920 (meta-wallet)
 
-  const MetaMultiSigWallet = await deploy("MetaMultiSigWallet",[
-    31337,
-    [ "0x834a9cc3D84941d9A9C80E334E0864A50C823E0C" ],
-    1
-  ])
+  const MetaMultiSigWallet = await deploy([ "0x968c683a6A245162c0892926130416611E1FE8ef" ],1)
 
 
 
@@ -84,7 +80,7 @@ const deploy = async (contractName, _args = [], overrides = {}, libraries = {}) 
   console.log(` 🛰  Deploying: ${contractName}`);
 
   const contractArgs = _args || [];
-  const contractArtifacts = await ethers.getContractFactory(contractName,{libraries: libraries});
+  //const contractArtifacts = await ethers.getContractFactory(contractName,{libraries: libraries});
   const deployed = await contractArtifacts.deploy(...contractArgs, overrides);
   const encoded = abiEncodeArgs(deployed, contractArgs);
   fs.writeFileSync(`artifacts/${contractName}.address`, deployed.address);
