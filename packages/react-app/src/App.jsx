@@ -193,8 +193,8 @@ function App(props) {
   }
 
 
-  const signaturesRequired = useContractReader(readContracts, contractName, "signaturesRequired")
-  if(DEBUG) console.log("✳️ signaturesRequired:",signaturesRequired)
+  const approvalsRequired = useContractReader(readContracts, contractName, "approvalsRequired")
+  if(DEBUG) console.log("✳️ approvalsRequired:",approvalsRequired)
 
   //event OpenStream( address indexed to, uint256 amount, uint256 frequency );
   const openStreamEvents = useEventListener(readContracts, contractName, "OpenStream", localProvider, 1);
@@ -313,7 +313,7 @@ function App(props) {
               blockExplorer={blockExplorer}
               nonce={nonce}
               ownerEvents={ownerEvents}
-              signaturesRequired={signaturesRequired}
+              approvalsRequired={approvalsRequired}
             />
           </Route>
           <Route path="/create">
@@ -347,7 +347,7 @@ function App(props) {
               readContracts={readContracts}
               blockExplorer={blockExplorer}
               nonce={nonce}
-              signaturesRequired={signaturesRequired}
+              approvalsRequired={approvalsRequired}
             />
           </Route>
           <Route path="/debug">
