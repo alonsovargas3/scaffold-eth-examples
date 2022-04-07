@@ -12,8 +12,8 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  * NOTE: This was started from started from 🏗 scaffold-eth - meta-multi-sig-wallet example https://github.com/austintgriffith/scaffold-eth/tree/meta-multi-sig
  */
 contract MetaMultiSigWallet {
+  using ECDSA for bytes32;
 
-    using ECDSA for bytes32;
 
     /* ========== GLOBAL VARIABLES ========== */
 
@@ -31,6 +31,10 @@ contract MetaMultiSigWallet {
      * @notice The number of approvals that are required before tx can be executed
      */
     uint public approvalsRequired;
+
+    uint public nonce;
+
+    uint public chainId = 31337;
 
     /**
      * @notice Transaction struct
@@ -96,6 +100,10 @@ contract MetaMultiSigWallet {
      */
     event ExecuteTransaction(
       address indexed owner,
+      address payable to,
+      uint value,
+      bytes data,
+      bytes result,
       uint indexed txIndex
     );
 
@@ -213,13 +221,14 @@ contract MetaMultiSigWallet {
       notExecuted(_txId)
     {
         require(_getApprovalCount(_txId) >= approvalsRequired, "Approvals is less than required approvals");
+        nonce++;
         Transaction storage transaction = transactions[_txId];
         transaction.executed = true;
-        (bool success, ) = transaction.to.call{value: transaction.value}(
+        (bool success, bytes memory result) = transaction.to.call{value: transaction.value}(
           transaction.data
         );
         require(success, "tx failed");
-        emit ExecuteTransaction(msg.sender, _txId);
+        emit ExecuteTransaction(msg.sender, payable(transaction.to), transaction.value, transaction.data, result, _txId);
     }
 
     /**
@@ -290,6 +299,21 @@ contract MetaMultiSigWallet {
     */
     function _getApprovalCount(uint _txId) private view returns (uint count){
       count = transactions[_txId].numApprovals;
+    }
+
+    /**
+    @notice Gets the number of transactions in the contract
+    */
+    function getTransactionsCount() public view returns (uint count) {
+      count = transactions.length;
+    }
+
+    function getTransactionHash(uint256 _nonce, address to, uint256 value, bytes memory data) public view returns (bytes32) {
+        return keccak256(abi.encodePacked(address(this), chainId, _nonce, to, value, data));
+    }
+
+    function recover(bytes32 _hash, bytes memory _signature) public pure returns (address) {
+        return _hash.toEthSignedMessageHash().recover(_signature);
     }
 
     /* ========== RECEIVE FUNCTION ========== */

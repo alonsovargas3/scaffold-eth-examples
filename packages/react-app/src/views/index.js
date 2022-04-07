@@ -1,4 +1,3 @@
-// export { default as Hints } from "./Hints";
 export { default as CreateTransaction } from "./CreateTransaction";
 export { default as Subgraph } from "./Subgraph";
 export { default as Owners } from "./Owners";

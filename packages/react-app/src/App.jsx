@@ -111,21 +111,34 @@ function App(props) {
 
   const contractName = "MetaMultiSigWallet"
 
-  //📟 Listen for broadcast events
+  //📟  BROADCAST EVENTS
   const executeTransactionEvents = useEventListener(readContracts, contractName, "ExecuteTransaction", localProvider, 1);
   if(DEBUG) console.log("📟 executeTransactionEvents:",executeTransactionEvents)
 
-  // keep track of a variable from the contract in the local React state:
-  const isOwner = useContractReader(readContracts, contractName, "isOwner", [address])
-  if(DEBUG) console.log("🤗 isOwner ("+address+"):",isOwner)
-
-  // keep track of a variable from the contract in the local React state:
-  const nonce = useContractReader(readContracts, contractName, "nonce")
-  if(DEBUG) console.log("# nonce:",nonce)
-
-  //📟 Listen for broadcast events
   const ownerEvents = useEventListener(readContracts, contractName, "Owner", localProvider, 1);
   if(DEBUG) console.log("📟 ownerEvents:",ownerEvents)
+
+  const depositEvents = useEventListener(readContracts, contractName, "Deposit", localProvider, 1);
+  if(DEBUG) console.log("📟 depositEvents:",depositEvents)
+
+  const submitTransactionEvents = useEventListener(readContracts, contractName, "SubmitTransaction", localProvider, 1);
+  if(DEBUG) console.log("📟 submitTransactionEvents:",submitTransactionEvents)
+
+  const approvedTransactionEvents = useEventListener(readContracts, contractName, "ApproveTransaction", localProvider, 1);
+  if(DEBUG) console.log("📟 approvedTransactionEvents:",approvedTransactionEvents)
+
+  const revokeApprovalEvents = useEventListener(readContracts, contractName, "RevokeApproval", localProvider, 1);
+  if(DEBUG) console.log("📟 revokeApprovalEvents:",revokeApprovalEvents)
+
+  //✳️ CONTRACT VARIABLES
+  const isOwner = useContractReader(readContracts, contractName, "isOwner", [address])
+  if(DEBUG) console.log("✳️ isOwner:",isOwner)
+
+  const approvalsRequired = useContractReader(readContracts, contractName, "approvalsRequired")
+  if(DEBUG) console.log("✳️ approvalsRequired:",approvalsRequired?approvalsRequired.toNumber():"")
+
+  const nonce = useContractReader(readContracts, contractName, "nonce")
+  if(DEBUG) console.log("✳️ nonce:",nonce?nonce.toNumber():"")
 
   // If you want to bring in the mainnet DAI contract it would look like:
   const mainnetDAIContract = useExternalContractLoader(mainnetProvider, DAI_ADDRESS, DAI_ABI)
@@ -137,17 +150,6 @@ function App(props) {
 
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader({DAI: mainnetDAIContract},"DAI", "balanceOf",["0x34aA3F359A9D614239015126635CE7732c18fDF3"])
-
-  // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts,"YourContract", "purpose")
-
-  //📟 Listen for broadcast events
-  const setPurposeEvents = useEventListener(readContracts, "YourContract", "SetPurpose", localProvider, 1);
-
-  /*
-  const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
-  console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
-  */
 
   //
   // 🧫 DEBUG 👨🏻‍🔬
@@ -191,18 +193,6 @@ function App(props) {
       </div>
     )
   }
-
-
-  const approvalsRequired = useContractReader(readContracts, contractName, "approvalsRequired")
-  if(DEBUG) console.log("✳️ approvalsRequired:",approvalsRequired)
-
-  //event OpenStream( address indexed to, uint256 amount, uint256 frequency );
-  const openStreamEvents = useEventListener(readContracts, contractName, "OpenStream", localProvider, 1);
-  if(DEBUG) console.log("📟 openStreamEvents:",openStreamEvents)
-
-  const withdrawStreamEvents = useEventListener(readContracts, contractName, "Withdraw", localProvider, 1);
-  if(DEBUG) console.log("📟 withdrawStreamEvents:",withdrawStreamEvents)
-
 
   const loadWeb3Modal = useCallback(async () => {
     const provider = await web3Modal.connect();
@@ -258,9 +248,6 @@ function App(props) {
           <Menu.Item key="/create">
             <Link onClick={()=>{setRoute("/create")}} to="/create">Create</Link>
           </Menu.Item>
-          <Menu.Item key="/pool">
-            <Link onClick={()=>{setRoute("/pool")}} to="/pool">Pool</Link>
-          </Menu.Item>
           <Menu.Item key="/debug">
             <Link onClick={()=>{setRoute("/debug")}} to="/debug">Debug</Link>
           </Menu.Item>
@@ -273,9 +260,9 @@ function App(props) {
               contractName={contractName}
               localProvider={localProvider}
               readContracts={readContracts}
-              price={price}
               mainnetProvider={mainnetProvider}
               blockExplorer={blockExplorer}
+
             />
           </Route>
             { /* uncomment for a second contract:
@@ -311,7 +298,6 @@ function App(props) {
               writeContracts={writeContracts}
               readContracts={readContracts}
               blockExplorer={blockExplorer}
-              nonce={nonce}
               ownerEvents={ownerEvents}
               approvalsRequired={approvalsRequired}
             />
@@ -341,12 +327,9 @@ function App(props) {
               mainnetProvider={mainnetProvider}
               localProvider={localProvider}
               yourLocalBalance={yourLocalBalance}
-              price={price}
-              tx={tx}
               writeContracts={writeContracts}
               readContracts={readContracts}
               blockExplorer={blockExplorer}
-              nonce={nonce}
               approvalsRequired={approvalsRequired}
             />
           </Route>
@@ -357,8 +340,6 @@ function App(props) {
               provider={localProvider}
               address={address}
               blockExplorer={blockExplorer}
-              purpose={purpose}
-              setPurposeEvents={setPurposeEvents}
             />
           </Route>
           <Route path="/mainnetdai">

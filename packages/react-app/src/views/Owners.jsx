@@ -9,7 +9,7 @@ import { useContractReader, useEventListener, useLocalStorage } from "../hooks";
 const axios = require('axios');
 const { Option } = Select;
 
-export default function Owners({contractName, ownerEvents, signaturesRequired, address, nonce, userProvider, mainnetProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts, blockExplorer }) {
+export default function Owners({contractName, ownerEvents, approvalsRequired, address, userProvider, mainnetProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts, blockExplorer }) {
 
   const history = useHistory();
 
@@ -22,7 +22,8 @@ export default function Owners({contractName, ownerEvents, signaturesRequired, a
 
   return (
     <div>
-      <h2 style={{marginTop:32}}>Signatures Required: {signaturesRequired?signaturesRequired.toNumber():<Spin></Spin>}</h2>
+      <h2 style={{marginTop:32}}>Approvals Required: {approvalsRequired?approvalsRequired.toNumber():<Spin></Spin>}</h2>
+      <h2 style={{marginTop:32}}>Owner Addresses</h2>
       <List
         style={{maxWidth:400,margin:"auto",marginTop:32}}
         bordered

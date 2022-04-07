@@ -15,6 +15,7 @@ export default function FrontPage({
   localProvider,
   readContracts,
   price,
+  owner,
   mainnetProvider,
   blockExplorer,
 }) {
@@ -49,16 +50,37 @@ export default function FrontPage({
           />
         </div>
       </div>
+      <h2 style={{marginTop:32}}>Executed Transactions</h2>
       <List
         bordered
         dataSource={executeTransactionEvents}
         renderItem={item => {
 
           return (
-            <>
-                <TransactionListItem item={item} mainnetProvider={mainnetProvider} blockExplorer={blockExplorer} price={price} readContracts={readContracts} contractName={contractName}/>
-            </>
-          );
+            <List.Item key={"owner_"+item["owner"]}>
+            <div style={{padding:16}}>
+              {item["txIndex"]?Number(item["txIndex"]):""}
+            </div>
+            <Address
+              address={item["owner"]}
+              ensProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              fontSize={32}
+            />
+            <Address
+              address={item["to"]}
+              ensProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              fontSize={32}
+            />
+            <div style={{padding:16}}>
+              {item["value"]?(Number(item["value"]/1000000000000000000)):""}
+            </div>
+            <div style={{padding:16}}>
+              {item["data"].toString()}
+            </div>
+            </List.Item>
+          )
         }}
       />
     </div>

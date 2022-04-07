@@ -53,20 +53,14 @@ export default function CreateTransaction({
     const inputTimer = setTimeout(async () => {
       console.log("EFFECT RUNNING");
       try {
-        // if(methodName == "transferFunds"){
-        //   console.log("Send transaction selected")
-        //   console.log("🔥🔥🔥🔥🔥🔥",amount)
-        //     const calldata = readContracts[contractName].interface.encodeFunctionData("transferFunds",[to,parseEther("" + parseFloat(amount).toFixed(12))])
-        //     setData(calldata);
-        // }
-        // decodedDataObject = readContracts ? await readContracts[contractName].interface.parseTransaction({ data }) : "";
-        // console.log("decodedDataObject", decodedDataObject);
-        // setCreateTxnEnabled(true);
         if(decodedDataObject.signature === "addSigner(address,uint256)"){
           setMethodName("addSigner")
           setSelectDisabled(true)
         } else if (decodedDataObject.signature === "removeSigner(address,uint256)"){
           setMethodName("removeSigner")
+          setSelectDisabled(true)
+        } else if (decodedDataObject.signature === "submitTransaction(address,uint256,bytes)"){
+          setMethodName("submitTransaction")
           setSelectDisabled(true)
         }
         decodedData = (
@@ -145,19 +139,11 @@ export default function CreateTransaction({
       */}
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
         <div style={{ margin: 8 }}>
-          <div style={inputStyle}>
-            <Input
-              prefix="#"
-              disabled
-              value={customNonce}
-              placeholder={"" + (nonce ? nonce.toNumber() : "loading...")}
-              onChange={setCustomNonce}
-            />
-          </div>
-                  <div style={{margin:8,padding:8}}>
+
+        <div style={{margin:8,padding:8}}>
           <Select value={methodName} disabled={selectDisabled} style={{ width: "100%" }} onChange={ setMethodName }>
-            //<Option key="transferFunds">transferFunds()</Option>
-            <Option disabled={true} key="addSigner">addSigner()</Option>
+            <Option disabled={true} key="submitTransaction">submitTransaction()</Option>
+            <Option key="addSigner">addSigner()</Option>
             <Option disabled={true} key="removeSigner">removeSigner()</Option>
           </Select>
         </div>
@@ -231,10 +217,6 @@ export default function CreateTransaction({
                 // IF SIG IS VALUE ETC END TO SERVER AND SERVER VERIFIES SIG IS RIGHT AND IS SIGNER BEFORE ADDING TY
 
                 console.log("RESULT", res.data);
-
-                setTimeout(() => {
-                  history.push("/pool");
-                }, 2777);
 
                 setResult(res.data.hash);
                 setTo();

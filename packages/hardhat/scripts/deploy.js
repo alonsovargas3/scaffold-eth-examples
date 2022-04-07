@@ -9,44 +9,7 @@ const main = async () => {
 
   console.log("\n\n 📡 Deploying...\n");
 
-
-  //const yourToken = await deploy("YourToken") // <-- add in constructor args like line 16 vvvv
-
-  //const wallet = await deploy("MetaMultiSigWallet",[0x968c683a6A245162c0892926130416611E1FE8ef],1)
-
-  //const Wallet = await ethers.getContractFactory("MetaMultiSigWallet");
-  //const wallet = await Wallet.deploy(["0x968c683a6A245162c0892926130416611E1FE8ef","0x34B460FC5418a8b7501E4dA52082aB76e8582ea4"],1);
-
   const MetaMultiSigWallet = await deploy("MetaMultiSigWallet",[["0x968c683a6A245162c0892926130416611E1FE8ef","0x34B460FC5418a8b7501E4dA52082aB76e8582ea4"],1])
-
-
-  //await yourToken.transfer(vendor.address,utils.parseEther("100"))
-
-  // const exampleToken = await deploy("ExampleToken")
-  // const examplePriceOracle = await deploy("ExamplePriceOracle")
-  // const smartContractWallet = await deploy("SmartContractWallet",[exampleToken.address,examplePriceOracle.address])
-
-  /*
-
-  //If you want to send some ETH to a contract on deploy (make your constructor payable!)
-
-  const yourContract = await deploy("YourContract", [], {
-  value: ethers.utils.parseEther("0.05")
-  });
-  */
-
-
-  /*
-
-  //If you want to send value to an address from the deployer
-
-  const deployerWallet = ethers.provider.getSigner()
-  await deployerWallet.sendTransaction({
-    to: "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-    value: ethers.utils.parseEther("0.001")
-  })
-  */
-
 
   console.log(
     " 💾  Artifacts (address, abi, and args) saved to: ",
